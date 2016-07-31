@@ -1,12 +1,12 @@
 """
-This is simple example for a constitutional neural network aimed at Tumor segmentation 
+This is simple example for a constitutional neural network aimed at Tumur segmentation from MRI images. 
 
 This category of problems fails under the general category of binary classification. 
 
 Architectures that are aimed at schematic segmentation are definitely better options for this task. This is just for demonstration purposes. 
 
 
-The code was developed utilizing python 2.7.11 and it is based on the keras package. 
+The code was developed utilizing python 2.7.11 and it is based on the keras package (should work with python 3 as well). 
 
 """
 
@@ -19,7 +19,7 @@ import sys
 os.environ['THEANO_FLAGS']='mode=FAST_RUN,device=gpu3,floatX=float32,optimizer=fast_compile'
 os.environ['KERAS_BACKEND'] = 'theano'
 
-In case you want to select a graphic card 
+In case you want to select a graphic card (i the above code i set the 3rd graphic card.) 
 """
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
@@ -37,7 +37,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 import numpy as np
 import keras 
 import keras.backend as K
-from keras_diagram import ascii
+from keras.utils.visualize_util import plot
 from keras.callbacks import LearningRateScheduler
 import math
 from keras import callbacks
@@ -106,6 +106,7 @@ def createmodel(img_channels,img_rows,img_cols):
 	adam=keras.optimizers.Adadelta(lr=0)
 	lrate = LearningRateScheduler(step_decay)
 	model.compile(loss='binary_crossentropy', optimizer=adam, metrics=['accuracy'])
+	plot(model, to_file='model.png')
 	return model
 
 def shuffle(X, y):
@@ -205,19 +206,11 @@ def trainandpredict(Scan=32 ,img_channels=1,batch_size=64,nb_epoch=100,data_augm
 	print (Y_cv_pred)
 	Y_cv_pred[Y_cv_pred>=.5]=1
 	Y_cv_pred[Y_cv_pred<.5]=0
-	# score1 = accuracy_score(y_val, Y_cv_pred)
-	# print ('Prediction score')
-	# print (metrics.precision_score(y_val, Y_cv_pred))
-	# print ('Recall score')
-	# print (metrics.recall_score(y_val, Y_cv_pred))
-	# print ('F1 score')
-	# print (metrics.f1_score(y_val, Y_cv_pred))
 	target_names=[] 
 	# print ("The f1-score gives you the harmonic mean of precision and recall. The scores corresponding to every class will tell you the accuracy of the classifier in classifying the data points in that particular class compared to all other classes.The support is the number of samples of the true response that lie in that class.")
 	target_names = ['class 0', 'class 1']
 	print(classification_report(y_val, Y_cv_pred, target_names=target_names,digits=4))
-	# valid_preds = modeleval.predict(X_val, verbose=0)
-	# valid_preds = valid_preds
+
 
 	return 0
 
